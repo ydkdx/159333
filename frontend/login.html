@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./log&reg.css">
+</head>
+<body>
+<div class="container">
+    <h1>Login</h1>
+    <div id="login-form">
+        <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" class="form-control" id="login-username" name="login-username">
+        </div>
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" class="form-control" id="login-password" name="login-password">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="login()">Login</button>
+            <button class="btn btn-secondary" onclick="window.location.href='register.html'">Register</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function login() {
+        let username = document.getElementById("login-username").value;
+        let password = document.getElementById("login-password").value;
+
+        fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'Login successfully') {
+                    alert("Login successful!");
+                    window.location.href = "index.html";
+                } else {
+                    alert("Invalid username or password.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>

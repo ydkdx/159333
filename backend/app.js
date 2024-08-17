@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const authRoutes = require('./routes/auth');
+const profileRoutes = require('./routes/profile');
+
+app.use('/api', profileRoutes);
 
 // 使用 CORS 中间件
 app.use(cors());

@@ -27,23 +27,121 @@ body {
 .navbar a:hover {
     background: #575757;
 }
-
+/* Hero 区域 */
 .hero {
-    height: 60vh;
-    background-image: url("../frontend/sources/iStock-1177487069.jpg");
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
+    background: linear-gradient(135deg, rgba(26, 42, 108, 0.8), rgba(178, 31, 31, 0.8)),
+    url('../frontend/sources/iStock-1177487069.jpg') center/cover no-repeat;
+    height: 100vh;
+    color: white;
     text-align: center;
-    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    animation: fadeInUp 2s ease-in-out;
 }
 
 .hero h1 {
-    font-size: 3em;
-    margin: 0;
+    font-size: 4rem;
+    font-weight: bold;
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.4);
 }
+
+.hero p {
+    font-size: 1.5rem;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+/* 轮换显示的工作职位，通用样式 */
+.hero-jobs {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    z-index: 1;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* 顶部显示的职位 */
+#job-title-top {
+    top: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 底部显示的职位 */
+#job-title-bottom {
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 左侧显示的职位 */
+#job-title-left {
+    top: 50%;
+    left: 200px;
+    transform: translateY(-50%);
+}
+
+/* 右侧显示的职位 */
+#job-title-right {
+    top: 50%;
+    right: 200px;
+    transform: translateY(-50%);
+}
+/* 左上角显示的职位 */
+#job-title-top-left {
+    top: 150px;
+    left: 20%;
+}
+
+/* 右上角显示的职位 */
+#job-title-top-right {
+    top: 150px;
+    right: 10%;
+}
+/* 动画效果 */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+
+.cta-btn {
+    padding: 15px 30px;
+    background-color: #ff7e5f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+}
+
+.cta-btn:hover {
+    background-color: #feb47b;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+}
+
+/* 渐入动画 */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
 .section {
     padding: 40px 20px;
@@ -64,14 +162,13 @@ body {
 .services {
     background: #fff;
 }
-
 .service-card {
     background: #fff;
     border: 1px solid #ddd;
     padding: 20px;
     margin: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
 }
 
@@ -79,17 +176,49 @@ body {
     transform: translateY(-10px);
 }
 
+/* 优化按钮样式 */
+.btn-highlight {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #007bff, #00d4ff);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.btn-highlight:hover {
+    background: linear-gradient(135deg, #0056b3, #00aaff);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+}
+
+.btn-highlight:active {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+/* 链接样式 */
+.service-card-link {
+    text-decoration: none;  /* 去除下划线 */
+    color: inherit;  /* 保持文本颜色一致 */
+    display: block;  /* 让链接行为覆盖整个块级元素 */
+}
 .team-member {
     display: inline-block;
-    width: 30%;
+    width: 22%;
     margin: 20px;
     text-align: center;
+    vertical-align: top;
 }
 
 .team-member img {
     border-radius: 50%;
     width: 150px;
     height: 150px;
+    object-fit: cover;
 }
 
 .contact-form {
@@ -171,4 +300,124 @@ body {
 
 .user-profile:hover .dropdown-content {
     display: block;
+}
+
+#job-details p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#job-title {
+    font-size: 24px;
+    color: #00b38a;
+    margin-bottom: 20px;
+}
+/* employee页面向左滑出的动画 */
+@keyframes slideOut {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+/* 目标页面向左滑入的动画 */
+@keyframes slideIn {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 离开页面时应用的滑动动画 */
+.slide-out {
+    animation: slideOut 0.6s ease-in-out forwards;
+}
+
+/* 进入页面时应用的滑入动画 */
+.slide-in {
+    animation: slideIn 0.6s ease-in-out forwards;
+}
+
+/* 为iframe设置初始样式，用于加载下一个页面 */
+iframe {
+    position: fixed;
+    top: 0;
+    left: 100%; /* 初始状态在屏幕外 */
+    width: 100%;
+    height: 100%;
+    border: none;
+    opacity: 0;
+}
+
+/* 推荐职位卡片容器 */
+#recommendations-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+/* 推荐职位卡片样式 */
+.job-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.job-title {
+    font-size: 1.25em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.job-location,
+.job-industry,
+.job-salary {
+    font-size: 1em;
+    color: #666;
+    margin: 5px 0;
+}
+
+.job-salary {
+    font-weight: bold;
+    color: #e74c3c; /* 红色显示薪资 */
+}
+
+/* Show More 按钮样式 */
+.show-more-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.show-more-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.show-more-btn:hover {
+    background-color: #0056b3;
 }

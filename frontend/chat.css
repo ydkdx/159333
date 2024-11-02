@@ -1,0 +1,79 @@
+/* Set overall chat container styling */
+.chat-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f3f4f6;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat message area */
+#messages {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    height: 1200px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+/* 当前用户的消息（右对齐） */
+.my-message {
+    background-color: #d1e7dd; /* 浅绿色 */
+    color: #155724;
+    text-align: right;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 15px;
+    margin: 8px 10px;
+    max-width: 60%;
+    align-self: flex-end; /* 右对齐 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 对方的消息（左对齐） */
+.partner-message {
+    background-color: #f8d7da; /* 浅红色 */
+    color: #721c24;
+    text-align: left;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 15px;
+    margin: 8px 10px;
+    max-width: 60%;
+    align-self: flex-start; /* 左对齐 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Input and button styling */
+.form-group {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.form-group input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 1em;
+}
+
+.form-group button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.form-group button:hover {
+    background-color: #1d4ed8;
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查看求职者简历</title>
+    <style>
+        /* CSS 样式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .jobseeker-details-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .jobseeker-details-container h2 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .jobseeker-details-container p {
+            margin: 20px 0;
+            font-size: 1.3em;
+            color: #555;
+        }
+
+        .jobseeker-details-container p strong {
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .button {
+            flex: 1;
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .chat-button {
+            background-color: #28a745;
+        }
+
+        .chat-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div id="jobseeker-details" class="jobseeker-details-container">
+    <h2>Bill</h2>
+    <p><strong>Username:</strong> as</p>
+    <p><strong>Email:</strong> 255910115@qq.com</p>
+    <p><strong>Education:</strong> 1</p>
+    <p><strong>Skills:</strong> 1</p>
+    <p><strong>Job Preferences:</strong> 1</p>
+    <p><strong>Experience:</strong> 1</p>
+    <div class="button-container">
+        <a href="mailto:255910115@qq.com" class="button">Email</a>
+        <a href="chat.html" class="button chat-button">Chat</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobseekerId = urlParams.get('jobseekerId');
+
+        if (!jobseekerId) {
+            document.getElementById('jobseeker-details').innerHTML = '<p>Unable to load resume information.</p>';
+            return;
+        }
+
+        fetch(`http://localhost:3000/api/resume/${jobseekerId}/details`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Request failed, status code: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received resume details:', data);
+                const jobseekerDetails = document.getElementById('jobseeker-details');
+                jobseekerDetails.innerHTML = `
+                    <h2>${data.full_name}</h2>
+                    <p><strong>Username:</strong> ${data.username}</p>
+                    <p><strong>Email:</strong> ${data.email}</p>
+                    <p><strong>Education:</strong> ${data.education_background || 'N/A'}</p>
+                    <p><strong>Skills:</strong> ${data.skills || 'N/A'}</p>
+                    <p><strong>Job Preferences:</strong> ${data.job_preferences || 'N/A'}</p>
+                    <p><strong>Experience:</strong> ${data.experience || 'N/A'}</p>
+                    <div class="button-container">
+                        <a href="mailto:${data.email}" class="button">Email</a>
+                        <a id="chat-button" class="button chat-button">Chat</a>
+                    </div>
+                `;
+
+                // Update chat button link to include jobseeker ID
+                const chatButton = document.getElementById('chat-button');
+                chatButton.addEventListener('click', function() {
+                    if (jobseekerId) {
+                        window.location.href = `chat.html?partnerId=${jobseekerId}`;
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching resume details:', error);
+                document.getElementById('jobseeker-details').innerHTML = '<p>Unable to load resume information.</p>';
+            });
+    });
+</script>
+
+</body>
+</html>

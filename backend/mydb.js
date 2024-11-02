@@ -1,12 +1,11 @@
-// backend/db.js
 const mysql = require('mysql2');
 
 // 创建 MySQL 连接
 const connection = mysql.createConnection({
-    host: '127.0.0.1',
+    host: 'localhost',
     user: 'root',
-    password: 'yuyi021016',
-    database: 'myapp'
+    password: 'CoIr166612',
+    database: 'job'
 });
 
 // 连接 MySQL

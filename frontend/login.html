@@ -5,49 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./log&reg.css">
+    <link rel="stylesheet" href="../frontend/logreg.css">
+
 </head>
 <body>
 <div class="container">
-    <h1>Login</h1>
-    <div id="login-form">
-        <div class="form-group">
-            <label for="login-username">Username</label>
-            <input type="text" class="form-control" id="login-username" name="login-username">
-        </div>
-        <div class="form-group">
-            <label for="login-password">Password</label>
-            <input type="password" class="form-control" id="login-password" name="login-password">
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary" onclick="login()">Login</button>
-            <button class="btn btn-secondary" onclick="window.location.href='register.html'">Register</button>
+    <div class="login-card">
+        <h1>Login</h1>
+        <div id="login-form">
+            <div class="form-group">
+                <label for="user-type">I am a:</label>
+                <select class="form-control" id="user-type">
+                    <option value="jobseeker">Job Seeker</option>
+                    <option value="employer">Employer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="login-username">Username</label>
+                <input type="text" class="form-control" id="login-username" name="login-username">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" class="form-control" id="login-password" name="login-password">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" onclick="login()">Login</button>
+                <button class="btn btn-secondary btn-block" onclick="window.location.href='register.html'">Register</button>
+                <button class="btn btn-info btn-block" onclick="guestLogin()">Login as Guest</button> <!-- 调整为与 Register 一致的按钮 -->
+            </div>
         </div>
     </div>
 </div>
 
 <script>
     function login() {
+        let userType = document.getElementById("user-type").value;
         let username = document.getElementById("login-username").value;
         let password = document.getElementById("login-password").value;
 
-        fetch('http://localhost:3000/api/login', {
+        fetch(`http://localhost:3000/api/login/${userType}`, {
             method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify({ username, password }),
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
+            }
         })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
-                if (data === 'Login successfully') {
+                if (data.success) {
+                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('userType', userType);
                     alert("Login successful!");
-                    window.location.href = "index.html";
+                    if (userType === 'employer') {
+                        window.location.href = "employer.html";
+                    } else {
+                        window.location.href = "employee.html";
+                    }
                 } else {
                     alert("Invalid username or password.");
                 }
             })
             .catch(error => console.error('Error:', error));
+    }
+
+    function guestLogin() {
+        alert("Logged in as Guest!");
+        localStorage.setItem('userId', 'guest');
+        window.location.href = "search.html";
     }
 </script>
 </body>

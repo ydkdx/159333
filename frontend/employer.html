@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard</title>
+    <link rel="stylesheet" href="./employer.css">
+</head>
+<body>
+<div class="navbar">
+    <a href="#home">Home</a>
+    <a href="#upload-job">Services</a>
+    <div class="user-profile">
+        <span id="username">Employer</span>
+        <div class="dropdown-content">
+            <a href="../frontend/profile/profile.html">Profile</a>
+            <a href="#">Settings</a>
+            <a href="../frontend/login.html" id="logout-btn">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div id="home" class="hero">
+    <h1>Welcome, Employer</h1>
+</div>
+
+<div id="upload-job" class="section">
+    <h2>Post a New Job</h2>
+    <div class="upload-job-form">
+        <form id="job-form">
+            <div class="form-group">
+                <label for="company-name">Company Name</label>
+                <input type="text" id="company-name" name="company-name" placeholder="Enter Company Name" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="Enter Location" required>
+            </div>
+            <div class="form-group">
+                <label for="industry">Industry</label>
+                <input type="text" id="industry" name="industry" placeholder="Enter Industry" required>
+            </div>
+            <div class="form-group">
+                <label for="job-type">Job Type</label>
+                <input type="text" id="job-type" name="job-type" placeholder="Enter Job Type" required>
+            </div>
+            <div class="form-group">
+                <label for="experience-level">Experience Level</label>
+                <input type="text" id="experience-level" name="experience-level" placeholder="Enter Experience Level" required>
+            </div>
+            <div class="form-group">
+                <label for="responsibilities">Job Responsibilities</label>
+                <textarea id="responsibilities" name="responsibilities" rows="5" placeholder="Enter Job Responsibilities" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="benefits">Job Benefits</label>
+                <textarea id="benefits" name="benefits" rows="5" placeholder="Enter Job Benefits" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="salary">Salary</label>
+                <input type="number" id="salary" name="salary" placeholder="Enter Salary" required>
+            </div>
+            <div class="form-group">
+                <label for="job-description">Job Description</label>
+                <textarea id="job-description" name="job-description" rows="5" placeholder="Enter Job Description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="job-requirements">Job Requirements</label>
+                <textarea id="job-requirements" name="job-requirements" rows="5" placeholder="Enter Job Requirements" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Job</button>
+        </form>
+    </div>
+</div>
+
+<!-- Add view resumes feature -->
+<div id="view-resumes" class="section">
+    <h2>View Submitted Resumes</h2>
+    <div id="resume-list"></div>
+</div>
+
+<div class="footer">
+    <p>Copyright © 2024 by Rain Company. All Rights Reserved.</p>
+</div>
+
+<script>
+    // Handle logout event
+    document.getElementById('logout-btn').addEventListener('click', function() {
+        localStorage.removeItem('userId');
+        window.location.href = "login.html";
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        // Load resume list
+        fetch(`http://localhost:3000/api/resume/employer/${userId}/resumes`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Request failed, status code: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received resume data:', data);  // Debug log
+                const resumeList = document.getElementById('resume-list');
+                resumeList.innerHTML = '';
+
+                if (data.length === 0 || data.message) {
+                    resumeList.innerHTML = '<p>No resumes submitted.</p>';
+                } else {
+                    data.forEach(resume => {
+                        const resumeCard = document.createElement('div');
+                        resumeCard.classList.add('resume-item');
+                        resumeCard.id = `resume-${resume.resume_id}`; // Use `resume_id` from the database
+                        resumeCard.innerHTML = `
+                        <h3>Username: ${resume.username}</h3>
+                        <p>Full Name: ${resume.full_name || 'N/A'}</p>
+                        <button onclick="viewDetailedResume(${resume.jobseeker_id})">View Details</button>
+                        <button onclick="deleteResume(${resume.resume_id})">Delete</button>
+                    `;
+                        resumeList.appendChild(resumeCard);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading resume list:', error);
+                document.getElementById('resume-list').innerHTML = '<p>Unable to load resumes.</p>';
+            });
+    });
+
+    function viewDetailedResume(jobseekerId) {
+        // Redirect to view resume details page
+        window.location.href = `view-resume.html?jobseekerId=${jobseekerId}`;
+    }
+
+    function deleteResume(resumeId) {
+        console.log('Resume ID to be deleted:', resumeId); // Confirm received resumeId is correct
+        if (!confirm('Are you sure you want to delete this resume?')) {
+            return;
+        }
+
+        fetch(`http://localhost:3000/api/resume/${resumeId}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Unable to delete resume');
+                }
+                document.getElementById(`resume-${resumeId}`).remove();
+            })
+            .catch(error => {
+                console.error('Error deleting resume:', error);
+                alert('An error occurred while deleting the resume. Please try again later.');
+            });
+    }
+
+    // Submit job form
+    document.getElementById('job-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const userId = localStorage.getItem('userId');  // Ensure to get employer ID from local storage
+        const companyName = document.getElementById('company-name').value;
+        const location = document.getElementById('location').value;
+        const industry = document.getElementById('industry').value;
+        const jobType = document.getElementById('job-type').value;
+        const experienceLevel = document.getElementById('experience-level').value;
+        const responsibilities = document.getElementById('responsibilities').value;
+        const benefits = document.getElementById('benefits').value;
+        const salary = document.getElementById('salary').value;
+        const jobDescription = document.getElementById('job-description').value;
+        const jobRequirements = document.getElementById('job-requirements').value;
+
+        try {
+            const response = await fetch('http://localhost:3000/api/post-job', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    company_name: companyName,
+                    location: location,
+                    industry: industry,
+                    job_type: jobType,
+                    experience_level: experienceLevel,
+                    responsibilities: responsibilities,
+                    benefits: benefits,
+                    salary: salary,
+                    job_description: jobDescription,
+                    job_requirements: jobRequirements,
+                    employer_id: userId  // Add employer ID to ensure the job is linked to the correct employer
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert('Job posted successfully!');
+            } else {
+                alert('Failed to post job: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while posting the job');
+        }
+    });
+</script>
+
+</body>
+</html>

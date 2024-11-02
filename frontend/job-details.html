@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .job-title {
+            font-size: 32px;
+            color: #e60023;
+            margin: 0;
+        }
+
+        .job-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e60023;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .job-details {
+            font-size: 16px;
+            line-height: 1.6em;
+            margin-bottom: 20px;
+        }
+
+        .apply-section {
+            margin-top: 40px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .apply-section button {
+            background-color: #e60023;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .apply-section button:hover {
+            background-color: #c0001a;
+        }
+
+        .job-detail-block {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .job-detail-block p {
+            margin: 0;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        #map {
+            height: 400px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .job-action-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .interest-btn {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .interest-btn:hover {
+            background-color: #218838;
+        }
+
+        .communicate-btn {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .communicate-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a href="employee.html">Home</a>
+    <div class="user-profile">
+        <span id="username">Employee</span>
+        <div class="dropdown-content">
+            <a href="profile.html" id="profile-link" style="display:none;">Profile</a>
+            <a href="../frontend/login.html" id="logout-btn">Logout</a>
+        </div>
+    </div>
+</div>
+
+<!-- Job Details Content -->
+<div class="container">
+    <div class="job-header">
+        <h1 class="job-title" id="jobTitle">Job Title</h1>
+        <p class="job-info" id="postedDate">Posted Date: </p>
+    </div>
+
+    <div class="job-actions">
+        <button id="interest-btn" class="job-action-btn interest-btn">Interested</button>
+        <button id="communicate-btn" class="job-action-btn communicate-btn">Communicate Now</button>
+    </div>
+
+    <div class="job-detail-block">
+        <p><span class="detail-label">Company:</span> <span id="companyName"></span></p>
+        <p><span class="detail-label">Location:</span> <span id="jobLocation"></span></p>
+        <p><span class="detail-label">Industry:</span> <span id="industry"></span></p>
+        <p><span class="detail-label">Job Type:</span> <span id="jobType"></span></p>
+        <p><span class="detail-label">Experience Level:</span> <span id="experienceLevel"></span></p>
+        <p><span class="detail-label">Salary:</span> <span id="jobSalary"></span></p>
+    </div>
+
+    <div class="job-detail-block">
+        <h2 class="section-title">Job Requirements</h2>
+        <p class="job-details" id="jobRequirements">None</p>
+    </div>
+
+    <div class="job-detail-block">
+        <h2 class="section-title">Job Responsibilities</h2>
+        <p class="job-details" id="jobResponsibilities">None</p>
+    </div>
+
+    <div class="job-detail-block">
+        <h2 class="section-title">Company Benefits</h2>
+        <p class="job-details" id="jobBenefits">None</p>
+    </div>
+
+    <div class="apply-section">
+        <h2>Submit Resume</h2>
+        <button onclick="submitResume()">Submit Resume</button>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>Copyright &copy; 2024 by Rain Company. All Rights Reserved.</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobId = urlParams.get('jobId');
+
+        if (jobId) {
+            fetch(`http://localhost:3000/api/jobs/${jobId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response error');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('jobTitle').textContent = data.company_name;
+                    document.getElementById('postedDate').textContent = `Posted Date: ${data.posted_date}`;
+                    document.getElementById('companyName').textContent = data.company_name;
+                    document.getElementById('jobLocation').textContent = data.location;
+                    document.getElementById('industry').textContent = data.industry;
+                    document.getElementById('jobType').textContent = data.job_type;
+                    document.getElementById('experienceLevel').textContent = data.experience_level;
+                    document.getElementById('jobSalary').textContent = `${data.salary} USD`;
+                    document.getElementById('jobRequirements').textContent = data.requirements || 'None';
+                    document.getElementById('jobResponsibilities').textContent = data.responsibilities || 'None';
+                    document.getElementById('jobBenefits').textContent = data.benefits || 'None';
+
+                    if (data.employer_id) {
+                        localStorage.setItem('employerId', data.employer_id);
+                    } else {
+                        console.error('employer_id not found');
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('jobTitle').textContent = 'Error loading job details';
+                    console.error('Error loading job details:', error);
+                });
+        } else {
+            document.getElementById('jobTitle').textContent = 'Job not found';
+        }
+    });
+
+    function submitResume() {
+        const jobId = new URLSearchParams(window.location.search).get('jobId');
+        const userId = localStorage.getItem('userId');
+        const resumeContent = "This is the user's resume content";
+
+        console.log('jobId:', jobId);
+        console.log('userId:', userId);
+
+        if (!userId) {
+            alert('Please log in first');
+            return;
+        }
+
+        fetch('http://localhost:3000/api/resume/submit-resume', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ jobId: jobId, jobseekerId: userId, resumeContent: resumeContent })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Resume submitted successfully!');
+                } else {
+                    alert('Failed to submit resume: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting resume:', error);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('http://localhost:3000/api/get-user-session', {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Not logged in');
+                }
+                return response.json();
+            })
+            .then(data => {
+                localStorage.setItem('userId', data.userId);
+            })
+            .catch(error => {
+                console.error('Error fetching user session:', error);
+            });
+
+        const interestButton = document.getElementById('interest-btn');
+        const jobId = new URLSearchParams(window.location.search).get('jobId');
+
+        interestButton.addEventListener('click', function () {
+            const userId = localStorage.getItem('userId');
+
+            if (!userId) {
+                alert('Please log in first');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            fetch('http://localhost:3000/api/jobs/interest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId, jobId: jobId })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Marked as interested');
+                    } else {
+                        alert('Please log in first');
+                        window.location.href = 'login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving interest:', error);
+                    alert('Error saving interest');
+                });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const communicateBtn = document.getElementById('communicate-btn');
+        communicateBtn.addEventListener('click', function() {
+            const employerId = localStorage.getItem('employerId');
+            if (employerId) {
+                window.location.href = `chat.html?partnerId=${employerId}`;
+            } else {
+                alert('Unable to retrieve employer information. Please try again later.');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

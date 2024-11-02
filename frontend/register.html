@@ -5,23 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./log&reg.css">
+    <link rel="stylesheet" href="../frontend/logreg.css">
 </head>
 <body>
 <div class="container">
-    <h1>Register</h1>
-    <div id="register-form">
-        <div class="form-group">
-            <label for="register-username">Username</label>
-            <input type="text" class="form-control" id="register-username" name="register-username">
-        </div>
-        <div class="form-group">
-            <label for="register-password">Password</label>
-            <input type="password" class="form-control" id="register-password" name="register-password">
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary" onclick="register()">Register</button>
-            <button class="btn btn-secondary" onclick="window.location.href='login.html'">Return to Login</button>
+    <div class="login-card">
+        <h1>Register</h1>
+        <div id="register-form">
+            <div class="form-group">
+                <label for="register-username">Username</label>
+                <input type="text" class="form-control" id="register-username" name="register-username">
+            </div>
+            <div class="form-group">
+                <label for="register-password">Password</label>
+                <input type="password" class="form-control" id="register-password" name="register-password">
+            </div>
+            <div class="form-group">
+                <label for="user-type">User Type</label>
+                <select id="user-type" class="form-control">
+                    <option value="jobseeker">Jobseeker</option>
+                    <option value="employer">Employer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" onclick="register()">Register</button>
+                <button class="btn btn-secondary" onclick="window.location.href='login.html'">Return to Login</button>
+            </div>
         </div>
     </div>
 </div>
@@ -30,8 +39,9 @@
     function register() {
         let username = document.getElementById("register-username").value;
         let password = document.getElementById("register-password").value;
+        let userType = document.getElementById("user-type").value;
 
-        fetch('http://localhost:3000/api/register', {
+        fetch(`http://localhost:3000/api/register/${userType}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -44,7 +54,7 @@
                     alert('Registration successful!');
                     window.location.href = "login.html";
                 } else {
-                    alert('Registration failed.');
+                    alert('Registration failed: ' + data);
                 }
             })
             .catch(error => console.error('Error:', error));

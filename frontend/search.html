@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职位搜索</title>
+    <link rel="stylesheet" href="./style.css"> <!-- 引入现有样式 -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center 65px;
+            color: #333;
+            margin-top: 0;
+        }
+
+        .navbar {
+            background: #333;
+            color: #fff;
+            padding: 15px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0 20px;
+            display: inline-block;
+        }
+
+        .navbar a:hover {
+            background: #575757;
+        }
+
+        .header {
+            /* 保留顶部导航栏的空间 */
+            text-align: center;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            background-color: #f4f4f4;
+        }
+
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin: 30px auto;
+            gap: 20px;
+            max-width: 1200px;
+        }
+
+        .search-bar-container {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .search-bar select, .search-bar input[type="text"], .search-bar button {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            width: calc(33% - 10px);
+        }
+
+        .search-bar button {
+            background-color: #e60023;
+            color: white;
+            border: none;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .search-bar button:hover {
+            background-color: #c0001a;
+        }
+
+        .filter-section {
+            width: 300px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .filter-section label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .filter-section input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .filter-section input[type="number"] {
+            width: calc(50% - 10px);
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .results-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .results-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .results-list li {
+            background-color: white;
+            z-index: 2;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .results-list li:hover {
+            transform: translateY(-5px);
+        }
+
+        .job-title {
+            font-size: 24px;
+            color: #e60023;
+            font-weight: bold;
+        }
+
+        .job-location {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .job-details {
+            margin-top: 10px;
+            font-size: 16px;
+            line-height: 1.6em;
+        }
+
+        .apply-section {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .apply-section button {
+            background: #e60023;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .apply-section button:hover {
+            background: #c0001a;
+        }
+
+        .save-job {
+            background: transparent;
+            border: 2px solid #e60023;
+            color: #e60023;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .save-job:hover {
+            background: #e60023;
+            color: white;
+        }
+
+        /* 图片自动滚动栏 */
+        .image-scroll-bar {
+            position: fixed;
+            right: 20px;
+            top: 250px;
+            width: 200px;
+            height: 600px;
+            overflow: hidden;
+            background: #f4f4f4;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1;
+        }
+
+        .image-scroll-bar img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .scroll-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            animation: scrollImages 10s infinite linear;
+        }
+
+        @keyframes scrollImages {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        @keyframes slideIn {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* 页面从右侧滑入的动画 */
+        @keyframes slideIn {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* 页面向左侧滑出的动画 */
+        @keyframes slideOut {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+
+        /* 进入页面时应用的滑动动画 */
+        .slide-in {
+            animation: slideIn 0.6s ease-in-out;
+        }
+
+        /* 离开页面时应用的滑动动画 */
+        .slide-out {
+            animation: slideOut 0.6s ease-in-out;
+        }
+
+    </style>
+</head>
+<body class="slide-in">
+
+<!-- 导航栏开始 -->
+<div class="navbar">
+    <a href="employee.html" onclick="navigateWithAnimation('employee.html')">Home</a>
+    <div class="user-profile">
+        <span id="username">Employee</span>
+        <div class="dropdown-content">
+            <a href="../frontend/resume-editor.html">Profile</a>
+            <a href="#">Settings</a>
+            <a href="../frontend/login.html" id="logout-btn">Logout</a> <!-- 添加 id -->
+        </div>
+    </div>
+</div>
+
+<!-- 导航栏结束 -->
+
+<div class="header">
+    Job Search
+</div>
+
+<div class="search-section">
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <h3>Salary Filter</h3>
+        <label>Min Salary <input type="number" id="minSalary" placeholder="Minimum"></label>
+        <label>Max Salary <input type="number" id="maxSalary" placeholder="Maximum"></label>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar-container">
+        <div class="search-bar">
+            <label for="searchInput"></label><input type="text" id="searchInput" placeholder="Search job title or company">
+            <select id="industrySelect">
+                <option value="">Select Industry</option>
+            </select>
+            <select id="locationSelect">
+                <option value="">Select Location</option>
+            </select>
+            <button onclick="searchJobs()">Search</button>
+        </div>
+    </div>
+</div>
+
+<div class="results-container">
+    <h2>Search Results:</h2>
+    <ul id="results" class="results-list"></ul>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        <button id="prevPage" onclick="changePage(-1)">Previous Page</button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextPage" onclick="changePage(1)">Next Page</button>
+    </div>
+</div>
+
+<!-- Image Scroll Bar -->
+<div class="image-scroll-bar">
+    <div class="scroll-container">
+        <img src="../frontend/sources/w1.webp" alt="Image 1">
+        <img src="../frontend/sources/w2.webp" alt="Image 2">
+        <img src="../frontend/sources/w3.webp" alt="Image 3">
+        <img src="../frontend/sources/w4.webp" alt="Image 4">
+    </div>
+</div>
+
+<script>
+    let currentPage = 1;
+    const limit = 10;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadDropdown('industrySelect', 'http://localhost:3000/api/industries');
+        loadDropdown('locationSelect', 'http://localhost:3000/api/locations');
+        // Show all jobs on page load
+        searchJobs();
+    });
+
+    function searchJobs() {
+        const searchTerm = document.getElementById('searchInput').value;
+        const industry = document.getElementById('industrySelect').value;
+        const location = document.getElementById('locationSelect').value;
+        const minSalary = document.getElementById('minSalary').value;
+        const maxSalary = document.getElementById('maxSalary').value;
+
+        // Build request parameters
+        const queryParams = new URLSearchParams({
+            keyword: searchTerm,
+            industry: industry,
+            location: location,
+            minSalary: minSalary,
+            maxSalary: maxSalary,
+            page: currentPage,
+            limit: limit
+        });
+
+        fetch(`http://localhost:3000/api/jobs?${queryParams.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultsList = document.getElementById('results');
+                resultsList.innerHTML = '';
+                if (data.length === 0 && currentPage === 1) {
+                    resultsList.innerHTML = '<li>No relevant jobs found.</li>';
+                } else if (data.length === 0) {
+                    currentPage--;
+                } else {
+                    data.forEach(job => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                    <div class="job-title">${job.company_name || 'Company name not provided'}</div>
+                    <div class="job-location">${job.location || 'Location not provided'}</div>
+                    <div class="job-details">${job.requirements || ''}</div>
+                    <div class="apply-section">
+                        <button onclick="applyForJob(${job.id})">Apply</button>
+                    </div>
+                `;
+                        resultsList.appendChild(li);
+                    });
+                    hasMoreData = data.length === limit;
+                }
+                document.getElementById('pageInfo').innerText = `Page ${currentPage}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const resultsList = document.getElementById('results');
+                resultsList.innerHTML = '<li>Error loading data.</li>';
+            });
+    }
+
+    let hasMoreData = true; // Used to determine if there is more data
+
+    function changePage(direction) {
+        if (direction === 1 && !hasMoreData) {
+            return; // Do not allow moving to the next page if no more data
+        }
+        currentPage += direction;
+        if (currentPage < 1) currentPage = 1;
+        searchJobs();
+    }
+
+    function applyForJob(jobId) {
+        window.location.href = `job-details.html?jobId=${jobId}`; // Redirect to job details page with jobId
+    }
+
+    function loadDropdown(dropdownId, apiUrl) {
+        const dropdown = document.getElementById(dropdownId);
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    dropdown.innerHTML += data.map(item => `<option value="${item}">${item}</option>`).join('');
+                } else {
+                    console.error('Expected an array for dropdown data', data);
+                }
+            })
+            .catch(error => console.error('Failed to load data:', error));
+    }
+
+    function toggleInterest(button, jobId) {
+        const interested = button.classList.contains('interested');
+        const url = interested ? `/api/uninterest-job/${jobId}` : `/api/interest-job/${jobId}`;
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            alert('Please log in first');
+            return;
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId: userId })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response error');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    button.classList.toggle('interested');
+                    button.textContent = interested ? 'Interested' : 'Uninterested';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+</body>
+</html>

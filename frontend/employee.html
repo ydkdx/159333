@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search Application</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="navbar">
+    <a href="#hero">Home</a>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#team">Team</a>
+    <a href="#contact">Contact</a>
+    <div class="user-profile">
+        <span id="username">Guest</span> <!-- Default display as Guest -->
+        <div class="dropdown-content">
+            <a href="profile.html" id="profile-link" style="display:none;">Profile</a> <!-- Profile link, hidden for guests -->
+            <a href="#" id="settings-link" style="display:none;">Settings</a> <!-- Settings link, hidden for guests -->
+            <a href="#" id="login-logout-btn">Login</a> <!-- Default display as Login -->
+        </div>
+    </div>
+</div>
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Our Website</h1>
+        <p>Find your dream job and grow your career with us!</p>
+        <button class="cta-btn" onclick="scrollToServices()">Get Started</button>
+    </div>
+    <!-- Dynamic job titles -->
+    <div id="job-title-top" class="hero-jobs">Software Engineer</div>
+    <div id="job-title-bottom" class="hero-jobs">Data Scientist</div>
+    <div id="job-title-left" class="hero-jobs">Product Manager</div>
+    <div id="job-title-right" class="hero-jobs">UI/UX Designer</div>
+    <div id="job-title-top-left" class="hero-jobs">Full Stack Developer</div>
+    <div id="job-title-top-right" class="hero-jobs">Backend Developer</div>
+</div>
+
+<div id="recommendations" class="section">
+    <h2>Recommended Jobs</h2>
+    <ul id="recommendations-list" class="results-list"></ul>
+    <div class="show-more-container">
+        <button id="show-more-btn" class="show-more-btn">Show More</button>
+    </div>
+</div>
+
+<div id="services" class="section services">
+    <h2>Our Services</h2>
+    <p>We offer a wide range of services to help you achieve your goals. Explore our services below.</p>
+    <div class="flip-container">
+        <a href="search.html" class="service-card-link" id="flip-btn" onclick="navigateWithAnimation('search.html')">
+            <div class="service-card">
+                <h3>Job Search</h3>
+                <p>Find your dream job now!</p>
+            </div>
+        </a>
+    </div>
+
+    <a href="#" class="service-card-link" id="resume-btn" onclick="navigateWithAnimation('resume-editor.html')">
+        <div class="service-card">
+            <h3>Write a Resume</h3>
+            <p>Write your resume to catch jobs</p>
+            <button class="btn-highlight" id="write-resume-btn">Write Resume</button>
+        </div>
+    </a>
+</div>
+
+<div id="about" class="section">
+    <h2>About Us</h2>
+    <p>Learn more about our company and what makes us unique. We are committed to providing exceptional services.</p>
+</div>
+
+<div id="team" class="section">
+    <h2>Meet Our Team</h2>
+    <div class="team-member">
+        <img src="../frontend/sources/shane.jpg" alt="Team Member 2">
+        <h3>SHANE</h3>
+        <p>Leader</p>
+    </div>
+    <div class="team-member">
+        <img src="../frontend/sources/1722828552135.jpg" alt="Team Member 1">
+        <h3>JUN</h3>
+        <p>Developer</p>
+    </div>
+    <div class="team-member">
+        <img src="../frontend/sources/xun.jpg" alt="Team Member 3">
+        <h3>CoIr</h3>
+        <p>Designer</p>
+    </div>
+    <div class="team-member">
+        <img src="../frontend/sources/BO.jpg" alt="Team Member 3">
+        <h3>BO</h3>
+        <p>Developer</p>
+    </div>
+</div>
+
+<div id="contact" class="section">
+    <h2>Contact Us</h2>
+    <div class="contact-form">
+        <form action="#" method="post">
+            <label>
+                <input type="text" name="name" placeholder="Your Name" required>
+            </label>
+            <label>
+                <input type="email" name="email" placeholder="Your Email" required>
+            </label>
+            <label>
+                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+            </label>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</div>
+
+<div class="footer">
+    <p>Copyright © 2024 by Rain Company. All Rights Reserved.</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const userId = localStorage.getItem('userId');
+        const loginLogoutBtn = document.getElementById('login-logout-btn');
+        const usernameSpan = document.getElementById('username');
+        const profileLink = document.getElementById('profile-link');
+        const settingsLink = document.getElementById('settings-link');
+
+        if (userId && userId !== 'guest') {
+            // User is logged in
+            loginLogoutBtn.textContent = 'Logout';
+            usernameSpan.textContent = 'Employee';  // Change to dynamic username if available
+            profileLink.style.display = 'block';
+            settingsLink.style.display = 'block';
+            loginLogoutBtn.addEventListener('click', function () {
+                localStorage.removeItem('userId');
+                window.location.href = 'login.html';
+            });
+        } else {
+            // Guest or not logged in
+            loginLogoutBtn.textContent = 'Login';
+            usernameSpan.textContent = 'Guest';
+            profileLink.style.display = 'none';  // Hide Profile link
+            settingsLink.style.display = 'none';  // Hide Settings link
+            loginLogoutBtn.addEventListener('click', function () {
+                window.location.href = 'login.html';
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const userId = localStorage.getItem('userId');
+        const writeResumeBtn = document.getElementById('write-resume-btn');
+
+        writeResumeBtn.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default link behavior
+            if (userId === 'guest' || !userId) {
+                // Redirect to login page if guest or not logged in
+                alert("Please log in to access the resume editor.");
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'resume-editor.html';
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch(`http://localhost:3000/api/recommendations`)
+            .then(response => response.json())
+            .then(data => {
+                const recommendationsList = document.getElementById('recommendations-list');
+                recommendationsList.innerHTML = '';
+
+                if (data.length === 0) {
+                    recommendationsList.innerHTML = '<li>No recommended jobs available.</li>';
+                } else {
+                    data.forEach(job => {
+                        const card = document.createElement('div');
+                        card.className = 'job-card';
+
+                        // Card click event to navigate to job details
+                        card.onclick = function() {
+                            window.location.href = `job-details.html?jobId=${job.id}`;
+                        };
+
+                        card.innerHTML = `
+                        <h3 class="job-title">${job.company_name}</h3>
+                        <p class="job-location">Location: ${job.location}</p>
+                        <p class="job-industry">Industry: ${job.industry}</p>
+                        <p class="job-salary">Salary: ${job.salary || 'Negotiable'}</p>
+                    `;
+                        recommendationsList.appendChild(card);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching recommendations:', error);
+            });
+
+        document.getElementById('show-more-btn').addEventListener('click', function() {
+            window.location.href = 'search.html';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const jobTitlesTop = ["Software Engineer", "Data Scientist", "Product Manager", "UI/UX Designer", "Full Stack Developer"];
+        const jobTitlesBottom = ["Data Scientist", "Product Manager", "Software Engineer", "UX Researcher", "Front-End Developer"];
+        const jobTitlesLeft = ["Product Manager", "UI/UX Designer", "Software Engineer", "Backend Developer", "DevOps Engineer"];
+        const jobTitlesRight = ["UI/UX Designer", "Full Stack Developer", "Project Manager", "Mobile Developer", "QA Engineer"];
+        const jobTitlesTopLeft = ["Full Stack Developer", "DevOps Engineer", "Mobile Developer", "QA Engineer", "UX Researcher"];
+        const jobTitlesTopRight = ["Backend Developer", "Cloud Engineer", "Cybersecurity Specialist", "Data Analyst", "Software Architect"];
+
+        const jobTitleTop = document.getElementById('job-title-top');
+        const jobTitleBottom = document.getElementById('job-title-bottom');
+        const jobTitleLeft = document.getElementById('job-title-left');
+        const jobTitleRight = document.getElementById('job-title-right');
+        const jobTitleTopLeft = document.getElementById('job-title-top-left');
+        const jobTitleTopRight = document.getElementById('job-title-top-right');
+
+        let indexTop = 0, indexBottom = 0, indexLeft = 0, indexRight = 0, indexTopLeft = 0, indexTopRight = 0;
+
+        function updateJobTitle(element, jobTitles, index) {
+            index = (index + 1) % jobTitles.length;
+            element.textContent = jobTitles[index];
+            return index;
+        }
+
+        setInterval(() => {
+            indexTop = updateJobTitle(jobTitleTop, jobTitlesTop, indexTop);
+        }, 3000);
+
+        setInterval(() => {
+            indexBottom = updateJobTitle(jobTitleBottom, jobTitlesBottom, indexBottom);
+        }, 4000);
+
+        setInterval(() => {
+            indexLeft = updateJobTitle(jobTitleLeft, jobTitlesLeft, indexLeft);
+        }, 5000);
+
+        setInterval(() => {
+            indexRight = updateJobTitle(jobTitleRight, jobTitlesRight, indexRight);
+        }, 6000);
+
+        setInterval(() => {
+            indexTopLeft = updateJobTitle(jobTitleTopLeft, jobTitlesTopLeft, indexTopLeft);
+        }, 6000);
+
+        setInterval(() => {
+            indexTopRight = updateJobTitle(jobTitleTopRight, jobTitlesTopRight, indexTopRight);
+        }, 6000);
+    });
+
+    function scrollToServices() {
+        document.getElementById('recommendations').scrollIntoView({behavior: 'smooth'});
+    }
+
+    function navigateWithAnimation(targetPage) {
+        document.body.classList.add('slide-out');
+
+        const iframe = document.createElement('iframe');
+        iframe.src = targetPage;
+        iframe.classList.add('slide-in');
+        document.body.appendChild(iframe);
+
+        setTimeout(function () {
+            window.location.href = targetPage;
+        }, 600);
+    }
+</script>
+</body>
+</html>

@@ -1,80 +1,80 @@
 # Job Portal Application
 
-**一个基于 Node.js 和 Express 的招聘平台，帮助求职者找到合适的职位，同时为雇主提供便捷的职位管理和沟通工具。平台支持用户注册、职位搜索、简历管理、职位推荐、实时聊天等功能。**
+**A recruitment platform based on Node.js and Express that helps job seekers find suitable positions while providing employers with convenient job management and communication tools. The platform supports functions such as user registration, job search, resume management, job recommendation, and real-time chat.**
 
-## 目录
-1. [项目简介](#项目简介)
-2. [功能](#功能)
-3. [安装与配置](#安装与配置)
-4. [API 端点](#api-端点)
-5. [使用示例](#使用示例)
-6. [技术栈](#技术栈)
-7. [未来的改进方向](#未来的改进方向)
+## Table of Contents
+1. [Project Introduction](#project-introduction)
+2. [Features](#features)
+3. [Installation and Configuration](#installation-and-configuration)
+4. [API Endpoints](#api-endpoints)
+5. [Usage Example](#usage-example)
+6. [Technology Stack](#technology-stack)
+7. [Future Improvement Directions](#future-improvement-directions)
 
-## 项目简介
-Job Portal Application 是一个在线招聘平台，主要面向求职者和雇主。求职者可以在平台上浏览和申请职位，创建和管理个人简历；雇主则可以发布职位，筛选并联系合适的候选人。平台还支持用户之间的实时聊天，提升求职和招聘的沟通效率。
+## Project Introduction
+The Job Portal Application is an online recruitment platform mainly targeting job seekers and employers. Job seekers can browse and apply for jobs on the platform, create and manage personal resumes; employers can post jobs, screen and contact suitable candidates. The platform also supports real-time chat between users to improve the communication efficiency of job seeking and recruitment.
 
-## 功能
-1. **用户注册与登录**：用户可以注册为“求职者”或“雇主”，并根据身份登录到不同的主页。
-2. **职位搜索与推荐**：求职者可以通过关键词、地点、行业、薪资等条件搜索职位，系统还会根据用户偏好推荐职位。
-3. **简历管理**：求职者可以创建、编辑和保存简历，并提交简历申请职位。
-4. **聊天功能**：求职者和雇主可以通过平台进行实时聊天，方便沟通。
-5. **职位收藏**：用户可以收藏自己感兴趣的职位，方便后续查看。
+## Features
+1. **User Registration and Login**: Users can register as "job seeker" or "employer" and log in to different homepages according to their identities.
+2. **Job Search and Recommendation**: Job seekers can search for jobs by keywords, locations, industries, salaries, and other conditions. The system will also recommend jobs based on user preferences.
+3. **Resume Management**: Job seekers can create, edit, and save resumes and submit resumes to apply for jobs.
+4. **Chat Function**: Job seekers and employers can chat in real time through the platform for convenient communication.
+5. **Job Collection**: Users can collect jobs they are interested in for later viewing.
 
-## 安装与配置
-1. **环境要求**：
-   - Node.js 14 或更高版本。
-   - MySQL 数据库。
-2. **克隆项目**：
+## Installation and Configuration
+1. **Environment Requirements**:
+   - Node.js 14 or higher.
+   - MySQL database.
+2. **Clone the Project**:
    ```bash
    git clone https://github.com/ydkdx/159333.git
    cd job-portal
    ```
-3. **安装依赖**：
+3. **Install Dependencies**:
    ```bash
    npm install
    ```
-4. **配置数据库**：
-   - 在 MySQL 中创建一个名为`job`的数据库。
-   - 在`mydb.js`文件中配置你的数据库连接信息。
-5. **初始化数据库**：
-   - 在 MySQL 中导入项目根目录中的`job_database.sql`文件，以创建数据库的表结构和初始数据。
-6. **运行项目**：
+4. **Configure the Database**:
+   - Create a database named `job` in MySQL.
+   - Configure your database connection information in the `mydb.js` file.
+5. **Initialize the Database**:
+   - Import the `job_database.sql` file in the project root directory into MySQL to create the table structure and initial data of the database.
+6. **Run the Project**:
    ```bash
    node app.js
    ```
-   项目将运行在`http://localhost:3000`。
+   The project will run at `http://localhost:3000`.
 
-## API 端点
-|方法|路径|描述|
+## API Endpoints
+|Method|Path|Description|
 |---|---|---|
-|POST|/api/register/:userType|用户注册（jobseeker 或 employer）|
-|POST|/api/login/:userType|用户登录|
-|GET|/api/jobs|获取职位列表，支持关键词、地点等筛选|
-|GET|/api/jobs/:jobId|获取指定职位的详细信息|
-|GET|/api/recommendations/:userId|获取推荐职位|
-|POST|/api/resume/save-resume|保存用户简历|
-|GET|/api/resume/get-resume|获取用户简历信息|
-|POST|/api/chat/message|发送聊天消息|
-|GET|/api/chat/messages/:userId/:partnerId|获取用户之间的聊天记录|
+|POST|/api/register/:userType|User registration (jobseeker or employer)|
+|POST|/api/login/:userType|User login|
+|GET|/api/jobs|Get job list, supporting filtering by keywords, locations, etc.|
+|GET|/api/jobs/:jobId|Get detailed information of a specific job|
+|GET|/api/recommendations/:userId|Get recommended jobs|
+|POST|/api/resume/save-resume|Save user resume|
+|GET|/api/resume/get-resume|Get user resume information|
+|POST|/api/chat/message|Send chat message|
+|GET|/api/chat/messages/:userId/:partnerId|Get chat records between users|
 
-## 使用示例
-1. 打开项目。
-   ![项目截图](images/1.png)
-2. 在终端将目录导到`backend`下，输入以下命令连接到后端服务器：
-   ![项目截图](images/2.png)
+## Usage Example
+1. Open the project.
+  ![Project Screenshot](images/1.png)
+2. In the terminal, navigate to the `backend` directory and enter the following command to connect to the backend server:
+  ![Project Screenshot](images/2.png)
    ```bash
    node app.js
    ```
-3. 打开前端并完成相关功能。
-  ![项目截图](images/3.png)
+3. Open the front end and complete the relevant functions.
+  ![Project Screenshot](images/3.png)
 
-## 技术栈
-1. 后端：Node.js、Express。
-2. 数据库：MySQL。
-3. 前端：HTML、CSS、JavaScript。
+## Technology Stack
+1. Backend: Node.js, Express.
+2. Database: MySQL.
+3. Frontend: HTML, CSS, JavaScript.
 
-## 未来的改进方向
-1. 增加用户消息通知系统，提醒用户新的职位动态和申请状态。
-2. 支持更多职位筛选条件，例如按工作经验和技能进行筛选。
-3. 增加管理员角色，支持平台管理员管理用户和职位内容。
+## Future Improvement Directions
+1. Add a user message notification system to remind users of new job dynamics and application statuses.
+2. Support more job filtering conditions, such as filtering by work experience and skills.
+3. Add an administrator role to support platform administrators in managing users and job content.
